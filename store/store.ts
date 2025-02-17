@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "./storage";
 import counterReducer from "./slices/couterSlice";
 import { apiSlice } from "./slices/apiSlice";
+import { selectedArticlesApi } from "./slices/selectedArticlesApiSlice"; // new slice
 import {
     persistReducer,
     FLUSH,
@@ -14,15 +15,18 @@ import {
 
 const rootReducer = combineReducers({
     [apiSlice.reducerPath]: apiSlice.reducer,
+    [selectedArticlesApi.reducerPath]: selectedArticlesApi.reducer,
     counter: counterReducer,
 });
+
+// Optionally, persist these slices by including their keys
 const persistConfig = {
     key: "root",
     storage,
-    whiteList: ['apiSlice']
+    whiteList: [apiSlice.reducerPath, selectedArticlesApi.reducerPath],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const makeStore = () => {
     return configureStore({
@@ -33,9 +37,10 @@ export const makeStore = () => {
                 serializableCheck: {
                     ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
                 },
-            }).concat(apiSlice.middleware),
+            }).concat(apiSlice.middleware, selectedArticlesApi.middleware),
     });
 };
+
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];

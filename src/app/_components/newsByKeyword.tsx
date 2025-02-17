@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useLazyGetNewsByKeywordQuery } from "../../../store/slices/apiSlice";
+import ArticleItem from "./articleItem";
 
 export default function SearchNews() {
   const [inputValue, setInputValue] = useState("");
@@ -27,8 +27,9 @@ export default function SearchNews() {
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <form onSubmit={handleSearch} className="flex gap-2 mb-6">
+    <div className="max-w-3xl h-lvh overflow-auto relative">
+      <h4 className="my-4">Client Side Rendering</h4>
+      <form onSubmit={handleSearch} className="flex gap-2 mb-6 sticky top-3">
         <input
           type="text"
           value={inputValue}
@@ -55,29 +56,7 @@ export default function SearchNews() {
       {data?.articles && (
         <ul className="grid grid-cols-1 gap-4">
           {data.articles.map((article) => (
-            <li
-              key={article.url || article.title}
-              className="p-4 border border-gray-200 rounded shadow"
-            >
-              <h2 className="text-lg font-semibold mb-2">{article.title}</h2>
-              {article.author && (
-                <p className="text-sm text-gray-600 mb-2">
-                  By {article.author} - {article.publishedAt}
-                </p>
-              )}
-
-              <p className="text-sm text-gray-800 mb-2">
-                {article.description?.slice(0, 100)}...
-              </p>
-
-              {/* Use article title in the URL, encoding it properly */}
-              <Link
-                href={`/articles/${encodeURIComponent(article.title)}`}
-                className="inline-block mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Read More
-              </Link>
-            </li>
+            <ArticleItem key={article.url || article.title} article={article} />
           ))}
         </ul>
       )}

@@ -1,5 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
+import { useForm } from "react-hook-form";
 import {
   useUpdateArticleMutation,
   useRecordArticleMutation,
@@ -17,41 +18,36 @@ export default function ArticlePage() {
   });
   const { data: latestNews } = useGetLatestNewsQuery();
 
-  const [article, setArticle] = useState<NewsArticle | null>(null);
   const [selected, setSelected] = useState(false);
-
   const [updateArticle] = useUpdateArticleMutation();
   const [recordArticle] = useRecordArticleMutation();
+
+  const { register, handleSubmit, setValue } = useForm<NewsArticle>();
 
   useEffect(() => {
     if (!articleId) return;
 
-    if (selectedArticle) {
-      setArticle(selectedArticle);
-      setSelected(true);
-    } else if (latestNews?.news) {
-      const newsArticle = latestNews.news.find((a) => a.id === articleId);
-      setArticle(newsArticle || null);
+    const articleData =
+      selectedArticle || latestNews?.news.find((a) => a.id === articleId);
+
+    if (articleData) {
+      setSelected(!!selectedArticle);
+      Object.keys(articleData).forEach((key) => {
+        setValue(
+          key as keyof NewsArticle,
+          articleData[key as keyof NewsArticle]
+        );
+      });
     }
-  }, [articleId, selectedArticle, latestNews]);
+  }, [articleId, selectedArticle, latestNews, setValue]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setArticle((prev) =>
-      prev ? { ...prev, [e.target.name]: e.target.value } : null
-    );
-  };
-
-  const handleSave = async () => {
-    if (!article) return;
-
+  const onSubmit = async (data: NewsArticle) => {
     try {
       if (selected) {
-        await updateArticle(article).unwrap();
+        await updateArticle(data).unwrap();
         alert("Article updated successfully!");
       } else {
-        await recordArticle(article).unwrap();
+        await recordArticle(data).unwrap();
         alert("Article added to selected articles!");
         setSelected(true);
       }
@@ -60,9 +56,6 @@ export default function ArticlePage() {
       alert("Failed to save article.");
     }
   };
-
-  if (!article)
-    return <p className="text-center text-gray-500">Article not found.</p>;
 
   return (
     <div className="max-w-3xl my-14 mx-auto p-6 border border-gray-300 rounded shadow-md">
@@ -75,47 +68,38 @@ export default function ArticlePage() {
         </Link>
       </div>
 
-      <label className="block mb-2">Title:</label>
-      <input
-        type="text"
-        name="title"
-        value={article.title}
-        onChange={handleInputChange}
-        className="w-full p-2 border border-gray-300 rounded mb-4"
-      />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label className="block mb-2">Title:</label>
+        <input
+          {...register("title")}
+          className="w-full p-2 border border-gray-300 rounded mb-4"
+        />
 
-      <label className="block mb-2">Author:</label>
-      <input
-        type="text"
-        name="author"
-        value={article.author || ""}
-        onChange={handleInputChange}
-        className="w-full p-2 border border-gray-300 rounded mb-4"
-      />
+        <label className="block mb-2">Author:</label>
+        <input
+          {...register("author")}
+          className="w-full p-2 border border-gray-300 rounded mb-4"
+        />
 
-      <label className="block mb-2">Description:</label>
-      <textarea
-        name="description"
-        value={article.description || ""}
-        onChange={handleInputChange}
-        className="w-full h-32 p-2 border border-gray-300 rounded mb-4"
-      />
+        <label className="block mb-2">Description:</label>
+        <textarea
+          {...register("description")}
+          className="w-full h-32 p-2 border border-gray-300 rounded mb-4"
+        />
 
-      <label className="block mb-2">Published Date:</label>
-      <input
-        type="text"
-        name="published"
-        value={article.published || ""}
-        onChange={handleInputChange}
-        className="w-full p-2 border border-gray-300 rounded mb-4"
-      />
+        <label className="block mb-2">Published Date:</label>
+        <input
+          {...register("published")}
+          className="w-full p-2 border border-gray-300 rounded mb-4"
+        />
 
-      <button
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        onClick={handleSave}
-      >
-        {selected ? "Save Changes" : "Save & Add to Selected"}
-      </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          {selected ? "Save Changes" : "Save & Add to Selected"}
+        </button>
+      </form>
     </div>
   );
 }

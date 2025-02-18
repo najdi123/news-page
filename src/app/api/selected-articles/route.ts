@@ -50,32 +50,6 @@ export async function POST(req: Request): Promise<NextResponse> {
     }
 }
 
-// DELETE route: Remove an article by its id sent in the body.
-export async function DELETE(req: Request): Promise<NextResponse> {
-    try {
-        const { id } = await req.json(); // read id from body
-        const articlesObj = readArticlesObject();
-
-        if (!articlesObj[id]) {
-            return NextResponse.json(
-                { message: "Article not found" },
-                { status: 404 }
-            );
-        }
-
-        delete articlesObj[id];
-        writeArticlesObject(articlesObj);
-
-        return NextResponse.json({ message: "Article deleted successfully" });
-    } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        return NextResponse.json(
-            { message: "Error deleting article", error: message },
-            { status: 500 }
-        );
-    }
-}
-
 // Helper: Read the file and return an object of articles.
 function readArticlesObject(): ArticlesObject {
     if (!fs.existsSync(filePath)) {

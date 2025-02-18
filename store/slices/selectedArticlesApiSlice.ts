@@ -1,38 +1,44 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { NewsArticle } from "../../types";
 
-
-
 export const selectedArticlesApi = createApi({
     reducerPath: "selectedArticlesApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000" }),
-    tagTypes: ["SelectedArticles"], // Define tag type
+    tagTypes: ["SelectedArticles"],
     endpoints: (builder) => ({
-        // GET: Retrieve all selected articles.
         getSelectedArticles: builder.query<NewsArticle[], void>({
             query: () => "/api/selected-articles",
-            transformResponse: (response: Record<string, NewsArticle>) => {
-                console.log("🚀 ~ Transforming API Response:", response);
-                return Object.values(response); // Convert object to array
-            },
+            transformResponse: (response: Record<string, NewsArticle>) => Object.values(response),
             providesTags: ["SelectedArticles"],
         }),
 
-        // POST: Record a new article.
+        getSelectedArticleById: builder.query<NewsArticle, string>({
+            query: (id) => `/api/selected-article/${id}`,
+        }),
+
         recordArticle: builder.mutation<{ message: string }, NewsArticle>({
             query: (article) => ({
-                url: "/api/selected-articles",
-                method: "POST",
+                url: `/api/selected-article/${article.id}`,
+                method: "PUT",
                 body: article,
             }),
             invalidatesTags: ["SelectedArticles"],
         }),
-        // DELETE: Remove an article by its id.
+
+
+        updateArticle: builder.mutation<{ message: string }, NewsArticle>({
+            query: (article) => ({
+                url: `/api/selected-article/${article.id}`,
+                method: "PUT",
+                body: article,
+            }),
+            invalidatesTags: ["SelectedArticles"],
+        }),
+
         deleteArticle: builder.mutation<{ message: string }, string>({
             query: (id) => ({
-                url: "/api/selected-articles",
+                url: `/api/selected-article/${id}`,
                 method: "DELETE",
-                body: { id },
             }),
             invalidatesTags: ["SelectedArticles"],
         }),
@@ -41,6 +47,8 @@ export const selectedArticlesApi = createApi({
 
 export const {
     useGetSelectedArticlesQuery,
+    useGetSelectedArticleByIdQuery,
     useRecordArticleMutation,
+    useUpdateArticleMutation,
     useDeleteArticleMutation,
 } = selectedArticlesApi;

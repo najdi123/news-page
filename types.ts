@@ -1,26 +1,20 @@
-export interface NewsSource {
-    id: string | null;
-    name: string;
-}
-
 export interface NewsArticle {
-    source: NewsSource;
-    author: string | null;
+    id: string;
     title: string;
     description: string;
-    content: string;
     url: string;
-    urlToImage: string | null;
-    publishedAt: string;
+    author: string;
+    image: string;      // field provided by Currents
+    language: string;
+    category: string[];
+    published: string;
 }
 
 export interface NewsResponse {
     status: "ok" | "error";
-    totalResults: number;
-    articles: NewsArticle[];
+    news: NewsArticle[];
 }
 
-// Define the Redux state shape for cached queries
 export interface RootState {
     api: {
         queries: {

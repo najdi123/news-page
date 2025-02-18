@@ -1,69 +1,41 @@
-"use client";
-import React from "react";
-import { useParams } from "next/navigation";
-import { useSelector } from "react-redux";
-import Image from "next/image";
-import { NewsArticle, RootState } from "../../../../types";
+import ArticleItem from "@/app/_components/articleItem";
+import { NewsArticle } from "../../../../types";
 
-export default function ArticlePage() {
-  // Get the article title from the URL
-  const { articleTitle } = useParams<{ articleTitle: string }>();
-
-  // Decode the title (URL-encoded in the search page)
-  const decodedTitle = decodeURIComponent(articleTitle);
-
-  // Retrieve articles from Redux cache
-  const articlesData = useSelector((state: RootState) => {
-    return (
-      state.api.queries['getNewsByKeyword("Technology")']?.data ||
-      state.api.queries['getNewsByKeyword("technology")']?.data
-    );
+async function getSelectedArticles(): Promise<NewsArticle[]> {
+  // Use an absolute URL for SSR. You can also use an environment variable to construct this URL.
+  const res = await fetch("http://localhost:3000/api/selected-articles", {
+    // Optionally disable caching if you need fresh data on each request.
+    next: { revalidate: 0 },
   });
+  if (!res.ok) {
+    throw new Error("Failed to fetch selected articles");
+  }
+  // Our API returns an object keyed by the article id.
+  const data = (await res.json()) as Record<string, NewsArticle>;
+  // Simply return an array of articles.
+  return Object.values(data);
+}
 
-  // Find the article by its title
-  const article: NewsArticle | undefined = articlesData?.articles.find(
-    (a) => a.title === decodedTitle
-  );
-
-  if (!article) {
-    return (
-      <div className="p-4">
-        <h1 className="text-xl font-bold">Article not found</h1>
-        <p>Please make sure you searched and clicked on a valid article.</p>
-      </div>
-    );
+export default async function SelectedArticles() {
+  let articles: NewsArticle[] = [];
+  try {
+    articles = await getSelectedArticles();
+  } catch (error: unknown) {
+    console.error(error);
   }
 
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{article.title}</h1>
-      {article.author && (
-        <p className="italic text-gray-600">By {article.author}</p>
-      )}
-      <p className="text-gray-500">Published at: {article.publishedAt}</p>
-
-      {article.description && <p className="text-lg">{article.description}</p>}
-      {article.content && <p className="text-base">{article.content}</p>}
-
-      {article.urlToImage && (
-        <Image
-          className="w-full h-auto rounded shadow"
-          src={article.urlToImage}
-          alt={article.title}
-          width={200}
-          height={200}
-        />
-      )}
-
-      {article.url && (
-        <a
-          href={article.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Read Original Article
-        </a>
+    <div className="max-w-3xl h-lvh overflow-auto">
+      <h4 className="my-4">Client Side Rendering (SEO OPTIMIZED)</h4>
+      <h2 className="text-2xl font-bold mb-4">Selected Articles</h2>
+      {articles.length === 0 ? (
+        <p>No selected articles.</p>
+      ) : (
+        <ul className="space-y-4">
+          {articles.map((article) => (
+            <ArticleItem key={article.id} article={article} />
+          ))}
+        </ul>
       )}
     </div>
   );

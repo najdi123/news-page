@@ -1,23 +1,47 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { NewsArticle } from "../../../types";
-import { useRecordArticleMutation } from "../../../store/slices/selectedArticlesApiSlice"; // adjust the import path as needed
+import type { NewsArticle } from "../../../types";
+import {
+  useRecordArticleMutation,
+  useDeleteArticleMutation,
+} from "../../../store/slices/selectedArticlesApiSlice";
 
 interface ArticleItemProps {
   article: NewsArticle;
+  fromSelected?: boolean;
 }
 
-export default function ArticleItem({ article }: ArticleItemProps) {
-  const [recordArticle, { isLoading, error }] = useRecordArticleMutation();
-
-  const handleRecord = async () => {
+export default function ArticleItem({
+  article,
+  fromSelected = false,
+}: ArticleItemProps) {
+  // Mutation hook for adding an article.
+  const [recordArticle, { isLoading: isAdding, error: addError }] =
+    useRecordArticleMutation();
+  // Mutation hook for deleting an article.
+  const [deleteArticle, { isLoading: isDeleting, error: deleteError }] =
+    useDeleteArticleMutation();
+  const handleAddToSelected = async () => {
     try {
       await recordArticle(article).unwrap();
-      alert("Article recorded successfully!");
+      alert("Article added to selected list!");
+      console.log("added, should invalidate articles");
     } catch (err) {
-      console.error("Error recording article:", err);
-      alert("Failed to record article.");
+      console.error("Error adding article:", err);
+      alert("Failed to add article.");
+    }
+  };
+
+  const handleDeleteFromSelected = async () => {
+    console.log("article", article);
+    try {
+      await deleteArticle(article.id).unwrap();
+      alert("Article removed from selected list!");
+      console.log("deleted,, should invalidate articles");
+    } catch (err) {
+      console.error("Error deleting article:", err);
+      alert("Failed to delete article.");
     }
   };
 
@@ -26,7 +50,7 @@ export default function ArticleItem({ article }: ArticleItemProps) {
       <h2 className="text-lg font-semibold mb-2">{article.title}</h2>
       {article.author && (
         <p className="text-sm text-gray-600 mb-2">
-          By {article.author} - {article.publishedAt}
+          By {article.author} - {article.published}
         </p>
       )}
       <p className="text-sm text-gray-800 mb-2">
@@ -34,20 +58,39 @@ export default function ArticleItem({ article }: ArticleItemProps) {
       </p>
       <div className="flex gap-2 mt-2">
         <Link
-          href={`/articles/${encodeURIComponent(article.title)}`}
+          href={`/articles/${article.id}`}
           className="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Read More
         </Link>
-        <button
-          onClick={handleRecord}
-          className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-          disabled={isLoading}
-        >
-          {isLoading ? "Recording..." : "Record Article"}
-        </button>
+        {!fromSelected ? (
+          <button
+            onClick={handleAddToSelected}
+            disabled={isAdding}
+            className="inline-block px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+          >
+            {isAdding ? "Adding..." : "Add to Selected"}
+          </button>
+        ) : (
+          <button
+            onClick={handleDeleteFromSelected}
+            disabled={isDeleting}
+            className="inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </button>
+        )}
       </div>
-      {error && <p className="text-red-500 mt-2">Error recording article.</p>}
+      {fromSelected && deleteError && (
+        <p className="text-red-500 mt-2">
+          Error deleting article. Please try again.
+        </p>
+      )}
+      {!fromSelected && addError && (
+        <p className="text-red-500 mt-2">
+          Error adding article. Please try again.
+        </p>
+      )}
     </li>
   );
 }

@@ -1,17 +1,31 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useLazyGetNewsByKeywordQuery } from "../../../store/slices/apiSlice";
 import ArticleItem from "./articleItem";
+import {
+  useGetLatestNewsQuery,
+  useLazySearchNewsQuery,
+} from "../../../store/slices/apiSlice";
+import { NewsArticle } from "../../../types";
 
-export default function SearchNews() {
+export default function News() {
   const [inputValue, setInputValue] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("Technology");
+  // If searchKeyword is empty, we'll show the latest news.
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-  // Lazy query function
-  const [triggerSearch, { data, error, isLoading }] =
-    useLazyGetNewsByKeywordQuery();
+  // Always fetch latest news.
+  const {
+    data: latestData,
+    error: latestError,
+    isLoading: latestIsLoading,
+  } = useGetLatestNewsQuery();
 
-  // Trigger fetch when searchKeyword changes
+  // Lazy query for searching news.
+  const [
+    triggerSearch,
+    { data: searchData, error: searchError, isLoading: searchIsLoading },
+  ] = useLazySearchNewsQuery();
+
+  // When a search keyword is submitted, trigger the search query.
   useEffect(() => {
     if (searchKeyword) {
       triggerSearch(searchKeyword);
@@ -21,10 +35,13 @@ export default function SearchNews() {
   // Handle form submission
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.trim() !== "") {
-      setSearchKeyword(inputValue.trim());
-    }
+    setSearchKeyword(inputValue.trim());
   };
+
+  // Determine which data, error, and loading state to show:
+  const dataToDisplay = searchKeyword ? searchData : latestData;
+  const errorToDisplay = searchKeyword ? searchError : latestError;
+  const isLoading = searchKeyword ? searchIsLoading : latestIsLoading;
 
   return (
     <div className="max-w-3xl h-lvh overflow-auto relative">
@@ -46,17 +63,17 @@ export default function SearchNews() {
       </form>
 
       {isLoading && <p className="text-gray-500">Loading...</p>}
-      {error && (
+      {errorToDisplay && (
         <p className="text-red-500">
           Error fetching news. Please try again later.
         </p>
       )}
 
       {/* Render articles if we have data */}
-      {data?.articles && (
+      {dataToDisplay && dataToDisplay.news && (
         <ul className="grid grid-cols-1 gap-4">
-          {data.articles.map((article) => (
-            <ArticleItem key={article.url || article.title} article={article} />
+          {dataToDisplay.news.map((article: NewsArticle) => (
+            <ArticleItem key={article.id} article={article} />
           ))}
         </ul>
       )}

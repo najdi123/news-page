@@ -1,41 +1,55 @@
 {
-  "https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_2e511bca-0491-48c8-9470-6d717a0e55c0": {
-    "source": {
-      "id": null,
-      "name": "Yahoo Entertainment"
-    },
-    "author": "Ian Carlos Campbell",
-    "title": "Samsung teased a very slim phone called the Galaxy S25 Edge",
-    "description": "Samsung is making a thin version of the Galaxy S25. The Galaxy S25 Edge was teased at the end of the company's Unpacked event, and it does appear to be meaningfully thinner than the other phones Samsung launched today.\nThere's very little to go off of in Sams…",
-    "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_2e511bca-0491-48c8-9470-6d717a0e55c0",
-    "urlToImage": null,
-    "publishedAt": "2025-01-22T19:35:53Z",
-    "content": "If you click 'Accept all', we and our partners, including 239 who are part of the IAB Transparency &amp; Consent Framework, will also store and/or access information on a device (in other words, use … [+703 chars]"
+  "0a73eb09-20ca-4c50-9a54-feda7b86928d": {
+    "id": "0a73eb09-20ca-4c50-9a54-feda7b86928d",
+    "title": "Otters seen for first time in 70 years at nature restoration site",
+    "description": "The elusive animals were caught on wildlife cameras at Ewhurst Park, a 925-acre former shooting estate being restored for nature and food production.",
+    "url": "https://www.standard.co.uk/news/environment/hampshire-otter-b1211858.html",
+    "author": "Emily Beament",
+    "image": "https://static.standard.co.uk/2025/02/18/12/18122128-070135cc-b72c-4b38-9b47-4b6cb7803172.png?width=1200&auto=webp&quality=75&crop=5:3,smart",
+    "language": "en",
+    "category": [
+      "general"
+    ],
+    "published": "2025-02-18 13:41:31 +0000"
   },
-  "https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_f7e72b86-f34e-4b98-95fc-4d9cc9b4087c": {
-    "source": {
-      "id": null,
-      "name": "Yahoo Entertainment"
-    },
-    "author": "Lawrence Bonk",
-    "title": "The UK’s digital driver’s licence is coming later this year",
-    "description": "The UK will release a digital driver’s license\r\n later this year, along with a digital wallet issued by the government. This will allow folks to “easily prove their age when buying age restricted items online and in person.” Obviously, it will also prove a pe…",
-    "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_f7e72b86-f34e-4b98-95fc-4d9cc9b4087c",
-    "urlToImage": null,
-    "publishedAt": "2025-01-21T16:50:08Z",
-    "content": "If you click 'Accept all', we and our partners, including 239 who are part of the IAB Transparency &amp; Consent Framework, will also store and/or access information on a device (in other words, use … [+703 chars]"
+  "1341ace6-4cce-44ce-a482-1df47eca7972": {
+    "id": "1341ace6-4cce-44ce-a482-1df47eca7972",
+    "title": "Meghan renames lifestyle brand 'As Ever' and debuts new image of daughter",
+    "description": "The Duchess of Sussex said she secured the new name in 2022.",
+    "url": "https://www.standard.co.uk/news/uk/meghan-netflix-the-tig-harry-the-duchess-b1211833.html",
+    "author": "Tony Jones",
+    "image": "https://static.standard.co.uk/2025/02/18/12/e36861870fadb1f83e52d2f75a519e5aY29udGVudHNlYXJjaGFwaSwxNzM5OTY0MTkx-2.78992615.jpg?width=1200&auto=webp&quality=75&crop=5:3,smart",
+    "language": "en",
+    "category": [
+      "general"
+    ],
+    "published": "2025-02-18 13:24:47 +0000"
   },
-  "https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_cdb08654-3e1c-4430-82c9-d7369f4636cc": {
-    "source": {
-      "id": null,
-      "name": "Yahoo Entertainment"
-    },
-    "author": "Amy Skorheim",
-    "title": "Here's how to pre-order the PS5 Midnight Black accessories",
-    "description": "Pre-orders are now open for four new PlayStation 5 accessories in a new colorway: Midnight Black. That's better than other types of black because it stays up past bedtime. The collection includes the DualSense Edge wireless controller, the Portal remote playe…",
-    "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_cdb08654-3e1c-4430-82c9-d7369f4636cc",
-    "urlToImage": null,
-    "publishedAt": "2025-01-17T01:21:50Z",
-    "content": "If you click 'Accept all', we and our partners, including 239 who are part of the IAB Transparency &amp; Consent Framework, will also store and/or access information on a device (in other words, use … [+703 chars]"
+  "a32db5f2-ba08-44b4-817e-a43049612542": {
+    "id": "a32db5f2-ba08-44b4-817e-a43049612542",
+    "title": "Meghan Markle’s New ‘As Ever’ Brand Debut Takes Subtle Swipe at Royal Past",
+    "description": "Meghan Markle shared a video clip where she discussed her new brand As Ever, and took a subtle swipe at her past royal life in her remarks.",
+    "url": "https://www.cheatsheet.com/entertainment/meghan-markle-as-ever-subtle-swipe-royal-past.html/",
+    "author": "Lucille Barilla",
+    "image": "https://www.cheatsheet.com/wp-content/uploads/2025/02/meghan-markle-2.webp?w=1200",
+    "language": "en",
+    "category": [
+      "entertainment",
+      "celebrity"
+    ],
+    "published": "2025-02-18 13:23:42 +0000"
+  },
+  "3c467e7e-8c66-4165-b35d-9921bec053a9": {
+    "id": "3c467e7e-8c66-4165-b35d-9921bec053a9",
+    "title": "Obama-appointed judge who became Trump rival during election interference case overseeing pivotal DOGE hearing",
+    "description": "A federal judge President Donald Trump once described as \"the most evil person\" is now hearing a lawsuit brought by blue states to stop the Department of Government Efficiency (DOGE) from accessing government data. First named to the bench in 2013 by then-President Barack Obama, U.S. District Judge ...",
+    "url": "https://www.foxnews.com/politics/obama-appointed-judge-who-became-trump-rival-during-election-interference-case-overseeing-pivotal-doge-hearing",
+    "author": "Fox News",
+    "image": "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2025/02/1024/512/donald-trump-tanya-chutkan-elon-musk-split.jpg?ve=1&tl=1",
+    "language": "en",
+    "category": [
+      "general"
+    ],
+    "published": "2025-02-18 13:00:13 +0000"
   }
 }

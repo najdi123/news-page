@@ -16,7 +16,6 @@ async function getSelectedArticles(): Promise<NewsArticle[]> {
 }
 
 export default async function SelectedArticles() {
-  console.log("SelectedArticles");
   let articles: NewsArticle[] = [];
   try {
     articles = await getSelectedArticles();

@@ -28,9 +28,13 @@ export default function ArticleItem({
     try {
       await recordArticle(article).unwrap();
       toast.success("Article added to selected list!");
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Error adding article:", err);
-      toast.error("Failed to add article.");
+
+      const errorMessage =
+        (err as { data?: { message?: string } })?.data?.message ||
+        "Failed to add article.";
+      toast.error(errorMessage);
     }
   };
 

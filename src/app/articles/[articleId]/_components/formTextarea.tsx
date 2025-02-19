@@ -1,7 +1,10 @@
+import { UseFormRegister } from "react-hook-form";
+import { NewsArticle } from "../../../../../types";
+
 type FormTextareaProps = {
   label: string;
-  name: string;
-  register: any;
+  name: keyof NewsArticle;
+  register: UseFormRegister<NewsArticle>;
 };
 
 export const FormTextarea = ({ label, name, register }: FormTextareaProps) => (

@@ -6,7 +6,7 @@ import { useGetLatestNewsQuery } from "../../../../../store/slices/apiSlice";
 import { NewsArticle } from "../../../../../types";
 
 export function useArticleForm(articleId: string | undefined) {
-    const { data: selectedArticle } = useGetSelectedArticleByIdQuery(articleId, {
+    const { data: selectedArticle } = useGetSelectedArticleByIdQuery(articleId!, {
         skip: !articleId,
     });
     const { data: latestNews } = useGetLatestNewsQuery();

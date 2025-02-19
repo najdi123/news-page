@@ -1,9 +1,11 @@
 import React from "react";
+import { NewsArticle } from "../../../../../types";
+import { UseFormRegister } from "react-hook-form";
 
 type FormInputProps = {
   label: string;
-  name: string;
-  register: any;
+  name: keyof NewsArticle;
+  register: UseFormRegister<NewsArticle>;
 };
 
 export const FormInput = ({ label, name, register }: FormInputProps) => (

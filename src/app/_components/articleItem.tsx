@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 import type { NewsArticle } from "../../../types";
 import {
   useRecordArticleMutation,
@@ -22,14 +23,14 @@ export default function ArticleItem({
   // Mutation hook for deleting an article.
   const [deleteArticle, { isLoading: isDeleting, error: deleteError }] =
     useDeleteArticleMutation();
+
   const handleAddToSelected = async () => {
     try {
       await recordArticle(article).unwrap();
-      alert("Article added to selected list!");
-      console.log("added, should invalidate articles");
+      toast.success("Article added to selected list!");
     } catch (err) {
       console.error("Error adding article:", err);
-      alert("Failed to add article.");
+      toast.error("Failed to add article.");
     }
   };
 
@@ -37,11 +38,10 @@ export default function ArticleItem({
     console.log("article", article);
     try {
       await deleteArticle(article.id).unwrap();
-      alert("Article removed from selected list!");
-      console.log("deleted,, should invalidate articles");
+      toast.success("Article removed from selected list!");
     } catch (err) {
       console.error("Error deleting article:", err);
-      alert("Failed to delete article.");
+      toast.error("Failed to delete article.");
     }
   };
 

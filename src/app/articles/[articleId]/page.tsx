@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import {
   useUpdateArticleMutation,
   useRecordArticleMutation,
@@ -45,15 +46,15 @@ export default function ArticlePage() {
     try {
       if (selected) {
         await updateArticle(data).unwrap();
-        alert("Article updated successfully!");
+        toast.success("Article updated successfully!");
       } else {
         await recordArticle(data).unwrap();
-        alert("Article added to selected articles!");
+        toast.success("Article added to selected articles!");
         setSelected(true);
       }
     } catch (error) {
       console.error("Error saving article:", error);
-      alert("Failed to save article.");
+      toast.error("Failed to save article.");
     }
   };
 

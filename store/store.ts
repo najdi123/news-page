@@ -1,6 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "./storage";
-import counterReducer from "./slices/couterSlice";
 import { apiSlice } from "./slices/apiSlice";
 import { selectedArticlesApi } from "./slices/selectedArticlesApiSlice"; // new slice
 import {
@@ -16,7 +15,6 @@ import {
 const rootReducer = combineReducers({
     [apiSlice.reducerPath]: apiSlice.reducer,
     [selectedArticlesApi.reducerPath]: selectedArticlesApi.reducer,
-    counter: counterReducer,
 });
 
 // Optionally, persist these slices by including their keys

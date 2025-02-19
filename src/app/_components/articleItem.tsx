@@ -35,7 +35,6 @@ export default function ArticleItem({
   };
 
   const handleDeleteFromSelected = async () => {
-    console.log("article", article);
     try {
       await deleteArticle(article.id).unwrap();
       toast.success("Article removed from selected list!");

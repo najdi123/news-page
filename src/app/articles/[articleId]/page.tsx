@@ -1,97 +1,35 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import {
-  useUpdateArticleMutation,
-  useRecordArticleMutation,
-  useGetSelectedArticleByIdQuery,
-} from "../../../../store/slices/selectedArticlesApiSlice";
-import { useGetLatestNewsQuery } from "../../../../store/slices/apiSlice";
-import { useEffect, useState } from "react";
-import { NewsArticle } from "../../../../types";
-import Link from "next/link";
+import { BackButton } from "./_components/backButton";
+import { FormInput } from "./_components/formInput";
+import { FormTextarea } from "./_components/formTextarea";
+import { FormDateInput } from "./_components/formDateInput";
+import { useArticleForm } from "./_components/useArticleForm";
 
 export default function ArticlePage() {
   const { articleId } = useParams<{ articleId: string }>();
-  const { data: selectedArticle } = useGetSelectedArticleByIdQuery(articleId, {
-    skip: !articleId,
-  });
-  const { data: latestNews } = useGetLatestNewsQuery();
-
-  const [selected, setSelected] = useState(false);
-  const [updateArticle] = useUpdateArticleMutation();
-  const [recordArticle] = useRecordArticleMutation();
-
-  const { register, handleSubmit, setValue } = useForm<NewsArticle>();
-
-  useEffect(() => {
-    if (!articleId) return;
-
-    const articleData =
-      selectedArticle || latestNews?.news.find((a) => a.id === articleId);
-
-    if (articleData) {
-      setSelected(!!selectedArticle);
-      Object.keys(articleData).forEach((key) => {
-        setValue(
-          key as keyof NewsArticle,
-          articleData[key as keyof NewsArticle]
-        );
-      });
-    }
-  }, [articleId, selectedArticle, latestNews, setValue]);
-
-  const onSubmit = async (data: NewsArticle) => {
-    try {
-      if (selected) {
-        await updateArticle(data).unwrap();
-        toast.success("Article updated successfully!");
-      } else {
-        await recordArticle(data).unwrap();
-        toast.success("Article added to selected articles!");
-        setSelected(true);
-      }
-    } catch (error) {
-      console.error("Error saving article:", error);
-      toast.error("Failed to save article.");
-    }
-  };
+  const { register, handleSubmit, onSubmit, selected } =
+    useArticleForm(articleId);
 
   return (
     <div className="max-w-3xl my-14 mx-auto p-6 border border-gray-300 rounded shadow-md">
       <div className="flex justify-between">
         <h2 className="text-2xl font-bold mb-4">Edit Article</h2>
-        <Link href={"/"}>
-          <h2 className="text-2xl font-bold p-4 border rounded-sm bg-secondary">
-            ⇦ Back
-          </h2>
-        </Link>
+        <BackButton />
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label className="block mb-2">Title:</label>
-        <input
-          {...register("title")}
-          className="w-full p-2 border border-gray-300 rounded mb-4"
+        <FormInput label="Title" name="title" register={register} />
+        <FormInput label="Author" name="author" register={register} />
+        <FormTextarea
+          label="Description"
+          name="description"
+          register={register}
         />
-
-        <label className="block mb-2">Author:</label>
-        <input
-          {...register("author")}
-          className="w-full p-2 border border-gray-300 rounded mb-4"
-        />
-
-        <label className="block mb-2">Description:</label>
-        <textarea
-          {...register("description")}
-          className="w-full h-32 p-2 border border-gray-300 rounded mb-4"
-        />
-
-        <label className="block mb-2">Published Date:</label>
-        <input
-          {...register("published")}
-          className="w-full p-2 border border-gray-300 rounded mb-4"
+        <FormDateInput
+          label="Published Date"
+          name="published"
+          register={register}
         />
 
         <button

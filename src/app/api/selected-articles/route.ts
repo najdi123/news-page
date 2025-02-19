@@ -12,7 +12,6 @@ const filePath = path.join(process.cwd(), "data", "articles.json");
 export async function GET(): Promise<NextResponse> {
     try {
         const articlesObj = readArticlesObject();
-        console.log("🚀 ~ GET ~ articlesObj:", articlesObj)
         return NextResponse.json(articlesObj);
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);

@@ -4,7 +4,8 @@ import { NewsArticle } from "../../types";
 export const selectedArticlesApi = createApi({
     reducerPath: "selectedArticlesApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000" }),
-    tagTypes: ["SelectedArticles"],
+    tagTypes: ["SelectedArticles", "SelectedArticle"], // Add a separate tag for individual articles
+
     endpoints: (builder) => ({
         getSelectedArticles: builder.query<NewsArticle[], void>({
             query: () => "/api/selected-articles",
@@ -14,6 +15,7 @@ export const selectedArticlesApi = createApi({
 
         getSelectedArticleById: builder.query<NewsArticle, string>({
             query: (id) => `/api/selected-article/${id}`,
+            providesTags: (result, error, id) => [{ type: "SelectedArticle", id }],
         }),
 
         recordArticle: builder.mutation<{ message: string }, NewsArticle>({
@@ -22,17 +24,22 @@ export const selectedArticlesApi = createApi({
                 method: "PUT",
                 body: article,
             }),
-            invalidatesTags: ["SelectedArticles"],
+            invalidatesTags: (result, error, article) => [
+                { type: "SelectedArticles" },
+                { type: "SelectedArticle", id: article.id } // Ensure specific article is invalidated
+            ],
         }),
-
 
         updateArticle: builder.mutation<{ message: string }, NewsArticle>({
             query: (article) => ({
                 url: `/api/selected-article/${article.id}`,
-                method: "PUT",
+                method: "PATCH",
                 body: article,
             }),
-            invalidatesTags: ["SelectedArticles"],
+            invalidatesTags: (result, error, article) => [
+                { type: "SelectedArticles" },
+                { type: "SelectedArticle", id: article.id }
+            ],
         }),
 
         deleteArticle: builder.mutation<{ message: string }, string>({

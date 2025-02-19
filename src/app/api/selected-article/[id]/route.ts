@@ -17,26 +17,63 @@ function writeArticlesObject(obj: Record<string, NewsArticle>): void {
     fs.writeFileSync(filePath, JSON.stringify(obj, null, 2), "utf8");
 }
 
-// ✅ **PUT: Update or Create Article**
+//  **PUT: Create Article (no repeats)**
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
     try {
-        const updatedArticle = (await req.json()) as NewsArticle;
+        const newArticle = (await req.json()) as NewsArticle;
         const articlesObj = readArticlesObject();
 
-        // ✅ Overwrite the article (create if it doesn't exist)
-        articlesObj[params.id] = updatedArticle;
+        if (articlesObj[params.id]) {
+            return NextResponse.json(
+                { message: "Article already added." },
+                { status: 409 }
+            );
+        }
 
-        // ✅ Save to file
+        articlesObj[params.id] = newArticle;
         writeArticlesObject(articlesObj);
 
-        return NextResponse.json({ message: "Article updated (or created)." });
+        return NextResponse.json({ message: "Article created successfully." });
     } catch (error) {
-        console.error("Error updating article:", error);
-        return NextResponse.json({ message: "Error updating article", error }, { status: 500 });
+        console.error("Error adding article:", error);
+        return NextResponse.json(
+            { message: "Error adding article", error },
+            { status: 500 }
+        );
     }
 }
 
-// ✅ **GET: Fetch Single Article**
+// **Patch: update current article
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+    try {
+        const newArticleData = (await req.json()) as NewsArticle; // Expect full replacement data
+        const articlesObj = readArticlesObject();
+
+        if (!articlesObj[params.id]) {
+            return NextResponse.json(
+                { message: "Article not found." },
+                { status: 404 }
+            );
+        }
+
+        // Replace the existing article with the new data
+        articlesObj[params.id] = newArticleData;
+
+        writeArticlesObject(articlesObj);
+
+        return NextResponse.json({ message: "Article replaced successfully." });
+    } catch (error) {
+        console.error("Error replacing article:", error);
+        return NextResponse.json(
+            { message: "Error replacing article", error },
+            { status: 500 }
+        );
+    }
+}
+
+
+
+//  **GET: Fetch Single Article**
 export async function GET(req: Request, { params }: { params: { id: string } }) {
     try {
         const articlesObj = readArticlesObject();
@@ -53,7 +90,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
-// ✅ **DELETE: Remove Single Article**
+//  **DELETE: Remove Single Article**
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
     try {
         const articlesObj = readArticlesObject();
